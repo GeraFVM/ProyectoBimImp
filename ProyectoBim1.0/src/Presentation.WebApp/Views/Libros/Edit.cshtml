@@ -1,0 +1,60 @@
+@{
+    ViewData["Title"] = "Libros > Editar";
+}
+
+@model Domain.Entities.IM253E01Libro
+
+<h1>Editar Libro: @Model.Titulo</h1>
+
+<form asp-action="Edit" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="Foto" /> @* Mantener la foto existente si no se sube una nueva *@
+
+    <div class="form-group mb-3">
+        <label asp-for="Titulo" class="form-label">Título:</label>
+        <input asp-for="Titulo" class="form-control" required />
+        <span asp-validation-for="Titulo" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Autor" class="form-label">Autor:</label>
+        <input asp-for="Autor" class="form-control" required />
+        <span asp-validation-for="Autor" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Editorial" class="form-label">Editorial:</label>
+        <input asp-for="Editorial" class="form-control" />
+        <span asp-validation-for="Editorial" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="ISBN" class="form-label">ISBN:</label>
+        <input asp-for="ISBN" class="form-control" required />
+        <span asp-validation-for="ISBN" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="FechaPublicacion" class="form-label">Fecha de Publicación:</label>
+        <input asp-for="FechaPublicacion" type="date" class="form-control" required />
+        <span asp-validation-for="FechaPublicacion" class="text-danger"></span>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Foto))
+    {
+        <div class="mb-3">
+            <label class="form-label">Foto Actual:</label><br />
+            <img src="@Model.Foto" alt="Foto del libro" style="max-width:200px; height:auto;" />
+        </div>
+    }
+    <div class="form-group mb-3">
+        <label class="form-label">Cambiar Foto (opcional):</label>
+        <input type="file" name="file" class="form-control" accept=".jpg,.png,.jpeg,.gif" />
+        <small class="form-text text-muted">Formatos aceptados: JPG, PNG, JPEG, GIF. Si no subes una nueva, se mantendrá la actual.</small>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

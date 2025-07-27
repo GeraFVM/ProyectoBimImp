@@ -1,0 +1,30 @@
+@{
+    ViewData["Title"] = "Usuarios > Detalle";
+}
+
+@model Domain.Entities.IM253E01Usuario
+
+<dl>
+    <dt>Id</dt>
+    <dd>@Model.Id</dd>
+
+    <dt>Nombre</dt>
+    <dd>@Model.Nombre</dd>
+
+    <dt>Edad</dt>
+    <dd>@(Model.Edad?.ToString() ?? "No especificado")</dd>
+
+    <dt>Foto</dt>
+    <dd>
+        @if (!string.IsNullOrEmpty(Model.Foto))
+        {
+            <img src="@Model.Foto" alt="Foto del usuario" />
+        }
+        else
+        {
+            <span>No disponible</span>
+        }
+    </dd>
+</dl>
+
+<a asp-action="Index" class="btn btn-danger mt-3">Regresar</a>

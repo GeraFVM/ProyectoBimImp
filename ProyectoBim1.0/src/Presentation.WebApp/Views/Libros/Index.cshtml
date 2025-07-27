@@ -1,0 +1,78 @@
+@{
+    ViewData["Title"] = "Libros";
+}
+
+@model List<Domain.Entities.IM253E01Libro>
+
+<a asp-action="Create">Crear Nuevo Libro</a>
+
+<h1>
+    Lista de Libros:
+</h1>
+
+<form asp-action="Index" method="get" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="searchId" class="form-control" placeholder="Buscar por ID..." value="@ViewData["CurrentIdFilter"]" />
+        <input type="text" name="searchString" class="form-control" placeholder="Buscar por Título o Autor..." value="@ViewData["CurrentStringFilter"]" />
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-outline-secondary">Buscar</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Limpiar</a>
+        </div>
+    </div>
+    @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
+    {
+        <p style="color:red;">@ViewData["ErrorMessage"]</p>
+    }
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th> <th>Título</th>
+            <th>Autor</th>
+            <th>Fecha de Publicación</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var libro in Model)
+        {
+            <tr>
+                <td>@libro.Id</td> <td>@libro.Titulo</td>
+                <td>@libro.Autor</td>
+                <td>
+                    @if (libro.FechaPublicacion != null)
+                    {
+                        @libro.FechaPublicacion.ToShortDateString()
+                    }
+                    else
+                    {
+                        <span>No disponible</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@libro.Id">Detalles</a> |
+                    <a asp-action="Edit" asp-route-id="@libro.Id">Editar</a> |
+                    <a href="#" onclick="confirmDeleteLibro('@libro.Id'); return false;">Eliminar</a>
+                </td>
+            </tr>
+        }
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="5">No se encontraron libros.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        // Función de confirmación para eliminar libros
+        function confirmDeleteLibro(id) {
+            if (confirm("¿Estás seguro de que quieres eliminar este libro? Esta acción no se puede deshacer.")) {
+                window.location.href = '@Url.Action("Delete", "Libros")/' + id;
+            }
+        }
+    </script>
+}

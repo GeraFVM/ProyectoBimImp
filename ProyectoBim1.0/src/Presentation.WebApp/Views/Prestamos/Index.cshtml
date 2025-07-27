@@ -1,0 +1,37 @@
+@{
+    ViewData["Title"] = "Préstamos";
+}
+
+@model List<Domain.Entities.IM253E01Prestamo>
+
+<div class="container mt-4">
+    <h1 class="mb-4">Lista de Préstamos</h1>
+
+    <a asp-action="Create" class="btn btn-primary mb-3">Crear Nuevo Préstamo</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Libro</th>
+                <th>Fecha de Préstamo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var prestamo in Model)
+            {
+                <tr>
+                    <td>@prestamo.UsuarioId</td>
+                    <td>@prestamo.LibroId</td>
+                    <td>@prestamo.FechaPrestamo.ToShortDateString()</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@prestamo.Id" class="btn btn-info btn-sm">Detalles</a>
+                        <a asp-action="Edit" asp-route-id="@prestamo.Id" class="btn btn-warning btn-sm">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@prestamo.Id" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

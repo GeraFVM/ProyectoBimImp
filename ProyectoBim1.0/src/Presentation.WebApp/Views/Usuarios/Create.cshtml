@@ -1,0 +1,65 @@
+@{
+    ViewData["Title"] = "Usuarios > Crear";
+}
+
+@model Domain.Entities.IM253E01Usuario
+
+<div class="container mt-4">
+    <h1 class="mb-4">Registrar Nuevo Usuario</h1>
+
+    <form asp-action="Create" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <div class="form-group mb-3">
+            <label asp-for="Nombre" class="form-label">Nombre:</label>
+            <input asp-for="Nombre" class="form-control" required />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Edad" class="form-label">Edad:</label>
+            <input asp-for="Edad" type="number" class="form-control" min="1" max="120" />
+            <small class="form-text text-muted">Ingrese la edad entre 1 y 120 años</small>
+            <span asp-validation-for="Edad" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Telefono" class="form-label">Teléfono:</label>
+            <input asp-for="Telefono" class="form-control" required />
+            <span asp-validation-for="Telefono" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label">Foto:</label>
+            <input type="file" name="file" class="form-control" accept=".jpg,.png,.jpeg,.gif" />
+            <small class="form-text text-muted">Formatos aceptados: JPG, PNG, JPEG, GIF</small>
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary me-2">Registrar</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Validación del formulario en el cliente
+        (function () {
+            'use strict'
+            
+            var forms = document.querySelectorAll('.needs-validation')
+            
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+}
