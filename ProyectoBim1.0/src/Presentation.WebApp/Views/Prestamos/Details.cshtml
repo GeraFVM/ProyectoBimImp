@@ -19,9 +19,9 @@
 
     <dt>Foto del Usuario</dt>
     <dd>
-        @if (Model.Usuario?.Foto != null)
+        @if (!string.IsNullOrEmpty(Model.Usuario?.Foto))
         {
-            <img src="@Model.Usuario.Foto" alt="Foto del usuario" />
+            <img src="@Model.Usuario.Foto" alt="Foto del usuario" style="max-width:150px; height:auto;"/>
         }
         else
         {
@@ -30,14 +30,32 @@
     </dd>
 
     <dt>Libro</dt>
-    <dd>@Model.Libro?.Titulo ?? "No especificado"</dd>
+    <dd>
+        @if (Model.Libro != null)
+        {
+            @*
+                **NOTA:** Hemos eliminado las referencias a Model.Libro.Titulo,
+                y ahora mostramos Autor, ISBN y Editorial.
+            *@
+            <span>Autor: @Model.Libro.Autor</span><br/>
+            <span>ISBN: @Model.Libro.ISBN</span><br/>
+            <span>Editorial: @(Model.Libro.Editorial ?? "N/A")</span>
+            @* Puedes agregar más propiedades del libro aquí si es necesario *@
+        }
+        else
+        {
+            <span>No especificado</span>
+        }
+    </dd>
 
     <dt>Libro Id</dt>
     <dd>@Model.LibroId</dd>
 
-
     <dt>Fecha de Préstamo</dt>
-    <dd>@(Model.FechaPrestamo.ToShortDateString())</dd> <!-- Cambiado de Model.Fecha a Model.FechaPrestamo -->
+    <dd>@(Model.FechaPrestamo.ToShortDateString())</dd>
+
+    <dt>Fecha de Devolución</dt>
+    <dd>@(Model.FechaDevolucion?.ToShortDateString() ?? "Pendiente")</dd>
 </dl>
 
 <a asp-action="Index" class="btn btn-danger mt-3">Regresar</a>

@@ -13,7 +13,7 @@
 <form asp-action="Index" method="get" class="mb-3">
     <div class="input-group">
         <input type="text" name="searchId" class="form-control" placeholder="Buscar por ID..." value="@ViewData["CurrentIdFilter"]" />
-        <input type="text" name="searchString" class="form-control" placeholder="Buscar por Título o Autor..." value="@ViewData["CurrentStringFilter"]" />
+        <input type="text" name="searchString" class="form-control" placeholder="Buscar por Autor..." value="@ViewData["CurrentStringFilter"]" /> @* Título eliminado del placeholder *@
         <div class="input-group-append">
             <button type="submit" class="btn btn-outline-secondary">Buscar</button>
             <a asp-action="Index" class="btn btn-outline-secondary">Limpiar</a>
@@ -28,9 +28,12 @@
 <table>
     <thead>
         <tr>
-            <th>Id</th> <th>Título</th>
+            <th>Id</th> 
+            @* Se eliminó <th>Título</th> *@
             <th>Autor</th>
-            <th>Fecha de Publicación</th>
+            @* Se eliminó <th>Fecha de Publicación</th> *@
+            <th>Editorial</th> @* Añadida Editorial para mostrar todas las columnas existentes en la BD *@
+            <th>ISBN</th> @* Añadida ISBN para mostrar todas las columnas existentes en la BD *@
             <th>Acciones</th>
         </tr>
     </thead>
@@ -38,18 +41,12 @@
         @foreach (var libro in Model)
         {
             <tr>
-                <td>@libro.Id</td> <td>@libro.Titulo</td>
+                <td>@libro.Id</td> 
+                @* Se eliminó <td>@libro.Titulo</td> *@
                 <td>@libro.Autor</td>
-                <td>
-                    @if (libro.FechaPublicacion != null)
-                    {
-                        @libro.FechaPublicacion.ToShortDateString()
-                    }
-                    else
-                    {
-                        <span>No disponible</span>
-                    }
-                </td>
+                <td>@(libro.Editorial ?? "N/A")</td> @* Muestra Editorial, con "N/A" si es nulo *@
+                <td>@libro.ISBN</td> @* Muestra ISBN *@
+                @* Se eliminó el bloque de FechaPublicacion *@
                 <td>
                     <a asp-action="Details" asp-route-id="@libro.Id">Detalles</a> |
                     <a asp-action="Edit" asp-route-id="@libro.Id">Editar</a> |
@@ -60,7 +57,7 @@
         @if (!Model.Any())
         {
             <tr>
-                <td colspan="5">No se encontraron libros.</td>
+                <td colspan="5">No se encontraron libros.</td> @* Se ajustó el colspan a 5 (Id, Autor, Editorial, ISBN, Acciones) *@
             </tr>
         }
     </tbody>
@@ -71,7 +68,10 @@
         // Función de confirmación para eliminar libros
         function confirmDeleteLibro(id) {
             if (confirm("¿Estás seguro de que quieres eliminar este libro? Esta acción no se puede deshacer.")) {
-                window.location.href = '@Url.Action("Delete", "Libros")/' + id;
+                // Se cambió a POST para el método DeleteConfirmed
+                $.post('@Url.Action("Delete", "Libros")', { id: id }, function () {
+                    window.location.reload(); // Recargar la página después de eliminar
+                });
             }
         }
     </script>

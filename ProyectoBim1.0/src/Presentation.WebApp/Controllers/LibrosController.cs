@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Domain.Entities;
 using Infrastructure.Data;
 using Application.Services; 
-using System.Linq; 
+using System.Linq; // Necesario para .Where() y .ToList()
 
 namespace Presentation.WebApp.Controllers
 {
@@ -42,12 +42,12 @@ namespace Presentation.WebApp.Controllers
                 }
                 ViewData["CurrentIdFilter"] = searchId;
             }
-            // Filtrar por Título o Autor si no se buscó por ID, o adicionalmente
+            // Filtrar por Autor (ya no por Título)
             else if (!string.IsNullOrEmpty(searchString))
             {
-                data = data.Where(l => l.Titulo.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
-                                       l.Autor.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
-                ViewData["CurrentStringFilter"] = searchString;
+                // **CORRECCIÓN:** Se eliminó la referencia a Titulo
+                data = data.Where(l => l.Autor.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
+                ViewData["CurrentStringFilter"] = searchString; // Indica que se filtró por searchString
             }
 
             return View(data);
@@ -75,7 +75,11 @@ namespace Presentation.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(IM253E01Libro data, IFormFile file)
         {
-            data.Id = Guid.NewGuid();
+            // No hay validación de ModelState.IsValid aquí.
+            // Si necesitas validaciones del lado del servidor para otras propiedades,
+            // deberías agregarlas aquí o en el modelo con Data Annotations.
+
+            data.Id = Guid.NewGuid(); // Generar un nuevo GUID para el ID
             if (file != null)
             {
                 data.Foto = FileConverterService.ConvertToBase64(file.OpenReadStream());
@@ -101,6 +105,7 @@ namespace Presentation.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(IM253E01Libro data, IFormFile file)
         {
+            // Similar al Create, no hay validación ModelState.IsValid aquí.
             if (file != null)
             {
                 data.Foto = FileConverterService.ConvertToBase64(file.OpenReadStream());

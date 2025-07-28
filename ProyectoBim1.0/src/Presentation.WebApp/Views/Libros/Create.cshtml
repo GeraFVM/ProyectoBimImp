@@ -7,11 +7,12 @@
 <h1>Crear Nuevo Libro</h1>
 
 <form asp-action="Create" enctype="multipart/form-data">
-    <div class="form-group mb-3">
+    @* Se eliminó la sección de Título *@
+    @* <div class="form-group mb-3">
         <label asp-for="Titulo" class="form-label">Título:</label>
         <input asp-for="Titulo" class="form-control" required />
         <span asp-validation-for="Titulo" class="text-danger"></span>
-    </div>
+    </div> *@
     <div class="form-group mb-3">
         <label asp-for="Autor" class="form-label">Autor:</label>
         <input asp-for="Autor" class="form-control" required />
@@ -27,11 +28,12 @@
         <input asp-for="ISBN" class="form-control" required />
         <span asp-validation-for="ISBN" class="text-danger"></span>
     </div>
-    <div class="form-group mb-3">
+    @* Se eliminó la sección de Fecha de Publicación *@
+    @* <div class="form-group mb-3">
         <label asp-for="FechaPublicacion" class="form-label">Fecha de Publicación:</label>
         <input asp-for="FechaPublicacion" type="date" class="form-control" required />
         <span asp-validation-for="FechaPublicacion" class="text-danger"></span>
-    </div>
+    </div> *@
     <div class="form-group mb-3">
         <label class="form-label">Foto (opcional):</label>
         <input type="file" name="file" class="form-control" accept=".jpg,.png,.jpeg,.gif" />

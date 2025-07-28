@@ -154,11 +154,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBim\\ProyectoBim1.0\\src\\Application\\Application.csproj",
+      "projectUniqueName": "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBimImp\\ProyectoBim1.0\\src\\Application\\Application.csproj",
       "projectName": "Application",
-      "projectPath": "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBim\\ProyectoBim1.0\\src\\Application\\Application.csproj",
+      "projectPath": "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBimImp\\ProyectoBim1.0\\src\\Application\\Application.csproj",
       "packagesPath": "C:\\Users\\geraf\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBim\\ProyectoBim1.0\\src\\Application\\obj\\",
+      "outputPath": "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBimImp\\ProyectoBim1.0\\src\\Application\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\geraf\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -173,8 +173,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBim\\ProyectoBim1.0\\src\\Domain\\Domain.csproj": {
-              "projectPath": "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBim\\ProyectoBim1.0\\src\\Domain\\Domain.csproj"
+            "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBimImp\\ProyectoBim1.0\\src\\Domain\\Domain.csproj": {
+              "projectPath": "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBimImp\\ProyectoBim1.0\\src\\Domain\\Domain.csproj"
             }
           }
         }

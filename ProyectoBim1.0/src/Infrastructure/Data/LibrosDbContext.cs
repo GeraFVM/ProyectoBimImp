@@ -19,9 +19,9 @@ namespace Infrastructure.Data
         {
             var data = new List<IM253E01Libro>();
 
-            // Agregado Titulo y FechaPublicacion a la consulta SELECT
+            // Se eliminó Titulo y FechaPublicacion de la consulta SELECT
             using (var con = new SqlConnection(_connectionString))
-            using (var cmd = new SqlCommand("SELECT [Id],[Titulo],[Autor],[Editorial],[ISBN],[FechaPublicacion],[Foto] FROM [IM253E01Libro]", con))
+            using (var cmd = new SqlCommand("SELECT [Id],[Autor],[Editorial],[ISBN],[Foto] FROM [IM253E01Libro]", con))
             {
                 try
                 {
@@ -33,11 +33,11 @@ namespace Infrastructure.Data
                             data.Add(new IM253E01Libro
                             {
                                 Id = (Guid)dr["Id"],
-                                Titulo = dr["Titulo"].ToString(), // Lectura del Titulo
+                                // Se eliminó la lectura de Titulo
                                 Autor = dr["Autor"].ToString(),
                                 Editorial = dr["Editorial"]?.ToString(),
                                 ISBN = dr["ISBN"].ToString(),
-                                FechaPublicacion = (DateTime)dr["FechaPublicacion"], // Lectura de FechaPublicacion
+                                // Se eliminó la lectura de FechaPublicacion
                                 Foto = dr["Foto"]?.ToString()
                             });
                         }
@@ -55,9 +55,9 @@ namespace Infrastructure.Data
         {
             var libro = new IM253E01Libro();
 
-            // Agregado Titulo y FechaPublicacion a la consulta SELECT
+            // Se eliminó Titulo y FechaPublicacion de la consulta SELECT
             using (var con = new SqlConnection(_connectionString))
-            using (var cmd = new SqlCommand("SELECT [Id],[Titulo],[Autor],[Editorial],[ISBN],[FechaPublicacion],[Foto] FROM [IM253E01Libro] WHERE [Id] = @id", con))
+            using (var cmd = new SqlCommand("SELECT [Id],[Autor],[Editorial],[ISBN],[Foto] FROM [IM253E01Libro] WHERE [Id] = @id", con))
             {
                 cmd.Parameters.Add("@id", SqlDbType.UniqueIdentifier).Value = id;
 
@@ -69,18 +69,15 @@ namespace Infrastructure.Data
                         if (dr.Read())
                         {
                             libro.Id = (Guid)dr["Id"];
-                            libro.Titulo = dr["Titulo"].ToString(); // Lectura del Titulo
+                            // Se eliminó la lectura de Titulo
                             libro.Autor = dr["Autor"].ToString();
                             libro.Editorial = dr["Editorial"]?.ToString();
                             libro.ISBN = dr["ISBN"].ToString();
-                            libro.FechaPublicacion = (DateTime)dr["FechaPublicacion"]; // Lectura de FechaPublicacion
+                            // Se eliminó la lectura de FechaPublicacion
                             libro.Foto = dr["Foto"]?.ToString();
                         }
                         else
                         {
-                            // Si no se encuentra el libro, podrías devolver null o lanzar una excepción.
-                            // Por ahora, devuelve un objeto IM253E01Libro vacío.
-                            // Considera devolver null y manejarlo en el controlador.
                             return null;
                         }
                     }
@@ -97,16 +94,16 @@ namespace Infrastructure.Data
         {
             using (var con = new SqlConnection(_connectionString))
             using (var cmd = new SqlCommand(
-                // Agregado Titulo y FechaPublicacion a la consulta INSERT
-                "INSERT INTO [IM253E01Libro] ([Id],[Titulo],[Autor],[Editorial],[ISBN],[FechaPublicacion],[Foto]) " +
-                "VALUES (@id,@titulo,@autor,@editorial,@isbn,@fechapublicacion,@foto)", con))
+                // Se eliminó Titulo y FechaPublicacion de la consulta INSERT
+                "INSERT INTO [IM253E01Libro] ([Id],[Autor],[Editorial],[ISBN],[Foto]) " +
+                "VALUES (@id,@autor,@editorial,@isbn,@foto)", con))
             {
-                cmd.Parameters.Add("@id", SqlDbType.UniqueIdentifier).Value = libro.Id; // Usamos el ID del objeto
-                cmd.Parameters.Add("@titulo", SqlDbType.NVarChar).Value = libro.Titulo; // Añadir Titulo
+                cmd.Parameters.Add("@id", SqlDbType.UniqueIdentifier).Value = libro.Id;
+                // Se eliminó el parámetro @titulo
                 cmd.Parameters.Add("@autor", SqlDbType.NVarChar).Value = libro.Autor;
                 cmd.Parameters.Add("@editorial", SqlDbType.NVarChar).Value = (object)libro.Editorial ?? DBNull.Value;
                 cmd.Parameters.Add("@isbn", SqlDbType.NVarChar).Value = libro.ISBN;
-                cmd.Parameters.Add("@fechapublicacion", SqlDbType.DateTime).Value = libro.FechaPublicacion; // Añadir FechaPublicacion
+                // Se eliminó el parámetro @fechapublicacion
                 cmd.Parameters.Add("@foto", SqlDbType.NVarChar).Value = (object)libro.Foto ?? DBNull.Value;
 
                 try
@@ -125,16 +122,16 @@ namespace Infrastructure.Data
         {
             using (var con = new SqlConnection(_connectionString))
             using (var cmd = new SqlCommand(
-                // Agregado Titulo y FechaPublicacion a la consulta UPDATE
-                "UPDATE [IM253E01Libro] SET [Titulo] = @titulo, [Autor] = @autor, [Editorial] = @editorial, " +
-                "[ISBN] = @isbn, [FechaPublicacion] = @fechapublicacion, [Foto] = @foto WHERE [Id] = @id", con))
+                // Se eliminó Titulo y FechaPublicacion de la consulta UPDATE
+                "UPDATE [IM253E01Libro] SET [Autor] = @autor, [Editorial] = @editorial, " +
+                "[ISBN] = @isbn, [Foto] = @foto WHERE [Id] = @id", con))
             {
                 cmd.Parameters.Add("@id", SqlDbType.UniqueIdentifier).Value = libro.Id;
-                cmd.Parameters.Add("@titulo", SqlDbType.NVarChar).Value = libro.Titulo; // Añadir Titulo
+                // Se eliminó el parámetro @titulo
                 cmd.Parameters.Add("@autor", SqlDbType.NVarChar).Value = libro.Autor;
                 cmd.Parameters.Add("@editorial", SqlDbType.NVarChar).Value = (object)libro.Editorial ?? DBNull.Value;
                 cmd.Parameters.Add("@isbn", SqlDbType.NVarChar).Value = libro.ISBN;
-                cmd.Parameters.Add("@fechapublicacion", SqlDbType.DateTime).Value = libro.FechaPublicacion; // Añadir FechaPublicacion
+                // Se eliminó el parámetro @fechapublicacion
                 cmd.Parameters.Add("@foto", SqlDbType.NVarChar).Value = (object)libro.Foto ?? DBNull.Value;
 
                 try

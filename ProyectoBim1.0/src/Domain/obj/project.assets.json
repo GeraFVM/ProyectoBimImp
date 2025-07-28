@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBim\\ProyectoBim1.0\\src\\Domain\\Domain.csproj",
+      "projectUniqueName": "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBimImp\\ProyectoBim1.0\\src\\Domain\\Domain.csproj",
       "projectName": "Domain",
-      "projectPath": "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBim\\ProyectoBim1.0\\src\\Domain\\Domain.csproj",
+      "projectPath": "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBimImp\\ProyectoBim1.0\\src\\Domain\\Domain.csproj",
       "packagesPath": "C:\\Users\\geraf\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBim\\ProyectoBim1.0\\src\\Domain\\obj\\",
+      "outputPath": "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBimImp\\ProyectoBim1.0\\src\\Domain\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\geraf\\AppData\\Roaming\\NuGet\\NuGet.Config"

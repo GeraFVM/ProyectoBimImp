@@ -17,11 +17,9 @@ namespace Domain.Entities
     public class IM253E01Libro
     {
         public Guid Id { get; set; }
-        public string Titulo { get; set; } = string.Empty;
         public string Autor { get; set; } = string.Empty;
         public string? Editorial { get; set; }
         public string ISBN { get; set; } = string.Empty;
-        public DateTime FechaPublicacion { get; set; } 
         public string? Foto { get; set; }
     }
 }
