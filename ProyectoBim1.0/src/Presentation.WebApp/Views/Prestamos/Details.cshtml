@@ -14,9 +14,12 @@
     <dt>Empleado Id</dt>
     <dd>@Model.UsuarioId</dd>
 
+    @*
     <dt>Edad del Usuario</dt>
     <dd>@(Model.Usuario?.Edad.ToString() ?? "No especificado")</dd>
+    *@
 
+    @*
     <dt>Foto del Usuario</dt>
     <dd>
         @if (!string.IsNullOrEmpty(Model.Usuario?.Foto))
@@ -28,19 +31,15 @@
             <span>No disponible</span>
         }
     </dd>
+    *@
 
     <dt>Libro</dt>
     <dd>
         @if (Model.Libro != null)
         {
-            @*
-                **NOTA:** Hemos eliminado las referencias a Model.Libro.Titulo,
-                y ahora mostramos Autor, ISBN y Editorial.
-            *@
             <span>Autor: @Model.Libro.Autor</span><br/>
             <span>ISBN: @Model.Libro.ISBN</span><br/>
             <span>Editorial: @(Model.Libro.Editorial ?? "N/A")</span>
-            @* Puedes agregar más propiedades del libro aquí si es necesario *@
         }
         else
         {

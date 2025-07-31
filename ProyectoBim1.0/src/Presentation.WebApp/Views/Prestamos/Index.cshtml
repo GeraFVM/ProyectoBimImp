@@ -15,7 +15,7 @@
                 <th>Usuario</th>
                 <th>Libro</th>
                 <th>Fecha de Préstamo</th>
-                <th>Fecha de Devolución</th> @* Añadida columna para FechaDevolucion *@
+                <th>Fecha de Devolución</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -23,7 +23,7 @@
             @foreach (var prestamo in Model)
             {
                 <tr>
-                    <td>@prestamo.Usuario?.Nombre ?? "N/A"</td> @* Muestra el nombre del usuario *@
+                    <td>@prestamo.Usuario?.Nombre ?? "N/A"</td>
                     <td>
                         @if (prestamo.Libro != null)
                         {
@@ -33,13 +33,12 @@
                         {
                             <span>Libro no especificado</span>
                         }
-                    </td> @* Muestra autor y ISBN del libro *@
+                    </td>
                     <td>@prestamo.FechaPrestamo.ToShortDateString()</td>
-                    <td>@(prestamo.FechaDevolucion?.ToShortDateString() ?? "Pendiente")</td> @* Muestra fecha de devolución o "Pendiente" *@
+                    <td>@(prestamo.FechaDevolucion?.ToShortDateString() ?? "Pendiente")</td>
                     <td>
                         <a asp-action="Details" asp-route-id="@prestamo.Id" class="btn btn-info btn-sm">Detalles</a>
                         <a asp-action="Edit" asp-route-id="@prestamo.Id" class="btn btn-warning btn-sm">Editar</a>
-                        @* Para la eliminación POST, lo ideal es usar JavaScript como en Libros/Index.cshtml o un formulario *@
                         <a href="#" onclick="confirmDeletePrestamo('@prestamo.Id');" class="btn btn-danger btn-sm">Eliminar</a>
                     </td>
                 </tr>
@@ -47,7 +46,7 @@
             @if (!Model.Any())
             {
                 <tr>
-                    <td colspan="5">No se encontraron préstamos.</td> @* Ajustado el colspan *@
+                    <td colspan="5">No se encontraron préstamos.</td>
                 </tr>
             }
         </tbody>
@@ -58,16 +57,14 @@
     <script>
         function confirmDeletePrestamo(id) {
             if (confirm("¿Estás seguro de que quieres eliminar este préstamo? Esta acción no se puede deshacer.")) {
-                // Utiliza un formulario oculto para enviar la solicitud POST
                 var form = document.createElement('form');
                 form.method = 'post';
-                form.action = '@Url.Action("Delete", "Prestamos")/' + id; // Apunta al método POST DeleteConfirmed
+                form.action = '@Url.Action("Delete", "Prestamos")/' + id;
                 
-                // Agrega el token de verificación si estás usando [ValidateAntiForgeryToken]
                 var antiForgeryInput = document.createElement('input');
                 antiForgeryInput.type = 'hidden';
                 antiForgeryInput.name = '__RequestVerificationToken';
-                antiForgeryInput.value = '@Html.AntiForgeryToken()'.match(/value="([^"]*)"/)[1]; // Extrae el token
+                antiForgeryInput.value = '@Html.AntiForgeryToken()'.match(/value="([^"]*)"/)[1];
                 form.appendChild(antiForgeryInput);
 
                 document.body.appendChild(form);

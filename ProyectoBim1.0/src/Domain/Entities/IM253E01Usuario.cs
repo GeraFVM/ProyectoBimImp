@@ -19,7 +19,8 @@ namespace Domain.Entities
         public string Direccion { get; set; }
         public string Telefono { get; set; }
         public string Correo { get; set; }
-        public string? Foto { get; set; } // Asegúrate de que esta propiedad esté presente
-        public int? Edad { get; set; } // Agregar esta propiedad
+        // Elimina estas líneas:
+        // public string? Foto { get; set; }
+        // public int? Edad { get; set; }
     }
 }

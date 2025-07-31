@@ -3,24 +3,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Domain.Entities;
 using Infrastructure.Data; 
-using Application.Services; 
+// using Application.Services; // ¡Eliminamos esta si FileConverterService ya no se usa!
 using System.Linq; 
 using System.Collections.Generic; 
-using Microsoft.AspNetCore.Mvc.Rendering;       
-using Microsoft.AspNetCore.Mvc.ViewEngines;    
-using Microsoft.AspNetCore.Mvc.ViewFeatures;   
-using System.IO;                                
-using System.Threading.Tasks;                   
+// using System.IO; // ¡Eliminamos esta si StringWriter ya no se usa!
+// using System.Threading.Tasks; // ¡Eliminamos esta si no hay métodos async restantes!
 
 namespace Presentation.WebApp.Controllers
 {
     public class UsuariosController : Controller
     {
         private readonly UsuariosDbContext _usuariosDbContext;
-        private readonly IRazorViewEngine _razorViewEngine;     
-        private readonly ITempDataProvider _tempDataProvider;   
+        // Ya no se inyectan IRazorViewEngine ni ITempDataProvider
 
-        public UsuariosController(IConfiguration configuration, IRazorViewEngine razorViewEngine, ITempDataProvider tempDataProvider)
+        public UsuariosController(IConfiguration configuration) 
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             if (string.IsNullOrEmpty(connectionString))
@@ -29,8 +25,6 @@ namespace Presentation.WebApp.Controllers
             }
 
             _usuariosDbContext = new UsuariosDbContext(connectionString);
-            _razorViewEngine = razorViewEngine;
-            _tempDataProvider = tempDataProvider;
         }
 
         public IActionResult Index(string searchId)
@@ -55,40 +49,15 @@ namespace Presentation.WebApp.Controllers
             return View(data);
         }
 
-        public async Task<IActionResult> Details(Guid id) 
+        public IActionResult Details(Guid id) 
         {
             var data = _usuariosDbContext.Details(id);
             if (data == null)
             {
-                return Content("<p class='text-danger'>Usuario no encontrado.</p>", "text/html");
+                return NotFound(); 
             }
 
-            var viewResult = _razorViewEngine.FindView(ControllerContext, "Details", false); 
-
-            if (viewResult.View == null)
-            {
-                throw new ArgumentNullException($"La vista 'Details' no fue encontrada.");
-            }
-
-            var viewDictionary = new ViewDataDictionary(new Microsoft.AspNetCore.Mvc.ModelBinding.EmptyModelMetadataProvider(), ModelState)
-            {
-                Model = data 
-            };
-
-            using (var writer = new StringWriter())
-            {
-                var viewContext = new ViewContext(
-                    ControllerContext,
-                    viewResult.View,
-                    viewDictionary,
-                    new TempDataDictionary(ControllerContext.HttpContext, _tempDataProvider),
-                    writer,
-                    new HtmlHelperOptions()
-                );
-
-                await viewResult.View.RenderAsync(viewContext); 
-                return Content(writer.ToString(), "text/html"); 
-            }
+            return View(data); 
         }
 
         public IActionResult Create()
@@ -97,12 +66,14 @@ namespace Presentation.WebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(IM253E01Usuario data, IFormFile file)
+        // ¡IMPORTANTE! Eliminamos 'IFormFile file' ya que la base de datos no tiene columna Foto
+        public IActionResult Create(IM253E01Usuario data) 
         {
-            if (file != null)
-            {
-                data.Foto = FileConverterService.ConvertToBase64(file.OpenReadStream());
-            }
+            // ¡IMPORTANTE! Eliminamos el código que manejaba 'Foto'
+            // if (file != null)
+            // {
+            //     data.Foto = FileConverterService.ConvertToBase64(file.OpenReadStream());
+            // }
 
             _usuariosDbContext.Create(data);
             return RedirectToAction("Index");
@@ -119,12 +90,14 @@ namespace Presentation.WebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(IM253E01Usuario data, IFormFile file)
+        // ¡IMPORTANTE! Eliminamos 'IFormFile file' ya que la base de datos no tiene columna Foto
+        public IActionResult Edit(IM253E01Usuario data) 
         {
-            if (file != null)
-            {
-                data.Foto = FileConverterService.ConvertToBase64(file.OpenReadStream());
-            }
+            // ¡IMPORTANTE! Eliminamos el código que manejaba 'Foto'
+            // if (file != null)
+            // {
+            //     data.Foto = FileConverterService.ConvertToBase64(file.OpenReadStream());
+            // }
             _usuariosDbContext.Edit(data);
             return RedirectToAction("Index");
         }

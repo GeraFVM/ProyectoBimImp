@@ -11,9 +11,12 @@
     <dt>Nombre</dt>
     <dd>@Model.Nombre</dd>
 
+    @*
     <dt>Edad</dt>
     <dd>@(Model.Edad?.ToString() ?? "No especificado")</dd>
+    *@
 
+    @*
     <dt>Foto</dt>
     <dd>
         @if (!string.IsNullOrEmpty(Model.Foto))
@@ -25,6 +28,7 @@
             <span>No disponible</span>
         }
     </dd>
+    *@
 </dl>
 
 <a asp-action="Index" class="btn btn-danger mt-3">Regresar</a>

@@ -24,7 +24,6 @@
     <tr>
         <th>Id</th>
         <th>Nombre</th>
-        <th>Edad</th>
         <th></th>
     </tr>
     @foreach (var e in Model)
@@ -32,7 +31,6 @@
         <tr>
             <td>@e.Id</td>
             <th>@e.Nombre</th>
-            <td>@(e.Edad?.ToString() ?? "N/A")</td>
             <td>
                 <a href="#" onclick="showDetailsModal('@e.Id')" class="btn btn-info">Detalles</a> |
                 <a asp-action="Edit" asp-route-id="@e.Id">Editar</a> |

@@ -19,6 +19,7 @@ namespace Infrastructure.Data
         {
             var usuarios = new List<IM253E01Usuario>();
             using (var con = new SqlConnection(_connectionString))
+            // Revertir a la consulta original SIN Edad ni Foto
             using (var cmd = new SqlCommand("SELECT [Id],[Nombre],[Direccion],[Telefono],[Correo] FROM [IM253E01Usuario]", con))
             {
                 con.Open();
@@ -30,9 +31,12 @@ namespace Infrastructure.Data
                         {
                             Id = (Guid)dr["Id"],
                             Nombre = dr["Nombre"].ToString(),
-                            Direccion = dr["Direccion"]?.ToString(),
+                            Direccion = dr["Direccion"] == DBNull.Value ? null : dr["Direccion"].ToString(),
                             Telefono = dr["Telefono"].ToString(),
-                            Correo = dr["Correo"]?.ToString()
+                            Correo = dr["Correo"] == DBNull.Value ? null : dr["Correo"].ToString()
+                            // Eliminar el mapeo para Edad y Foto
+                            // Edad = dr["Edad"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["Edad"]),
+                            // Foto = dr["Foto"] == DBNull.Value ? null : dr["Foto"].ToString()
                         });
                     }
                 }
@@ -44,6 +48,7 @@ namespace Infrastructure.Data
         {
             var usuario = new IM253E01Usuario();
             using (var con = new SqlConnection(_connectionString))
+            // Revertir a la consulta original SIN Edad ni Foto
             using (var cmd = new SqlCommand("SELECT [Id],[Nombre],[Direccion],[Telefono],[Correo] FROM [IM253E01Usuario] WHERE [Id] = @id", con))
             {
                 cmd.Parameters.Add("@id", SqlDbType.UniqueIdentifier).Value = id;
@@ -54,9 +59,12 @@ namespace Infrastructure.Data
                     {
                         usuario.Id = (Guid)dr["Id"];
                         usuario.Nombre = dr["Nombre"].ToString();
-                        usuario.Direccion = dr["Direccion"]?.ToString();
+                        usuario.Direccion = dr["Direccion"] == DBNull.Value ? null : dr["Direccion"].ToString();
                         usuario.Telefono = dr["Telefono"].ToString();
-                        usuario.Correo = dr["Correo"]?.ToString();
+                        usuario.Correo = dr["Correo"] == DBNull.Value ? null : dr["Correo"].ToString();
+                        // Eliminar el mapeo para Edad y Foto
+                        // usuario.Edad = dr["Edad"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["Edad"]);
+                        // usuario.Foto = dr["Foto"] == DBNull.Value ? null : dr["Foto"].ToString();
                     }
                 }
             }
@@ -66,6 +74,7 @@ namespace Infrastructure.Data
         public void Create(IM253E01Usuario usuario)
         {
             using (var con = new SqlConnection(_connectionString))
+            // Revertir a la consulta original SIN Edad ni Foto
             using (var cmd = new SqlCommand("INSERT INTO [IM253E01Usuario] ([Id],[Nombre],[Direccion],[Telefono],[Correo]) VALUES (@id,@nombre,@direccion,@telefono,@correo)", con))
             {
                 cmd.Parameters.Add("@id", SqlDbType.UniqueIdentifier).Value = Guid.NewGuid();
@@ -73,6 +82,9 @@ namespace Infrastructure.Data
                 cmd.Parameters.Add("@direccion", SqlDbType.NVarChar).Value = (object)usuario.Direccion ?? DBNull.Value;
                 cmd.Parameters.Add("@telefono", SqlDbType.NVarChar).Value = usuario.Telefono;
                 cmd.Parameters.Add("@correo", SqlDbType.NVarChar).Value = (object)usuario.Correo ?? DBNull.Value;
+                // Eliminar los parámetros para Edad y Foto
+                // cmd.Parameters.Add("@edad", SqlDbType.Int).Value = (object)usuario.Edad ?? DBNull.Value;
+                // cmd.Parameters.Add("@foto", SqlDbType.NVarChar).Value = (object)usuario.Foto ?? DBNull.Value;
 
                 con.Open();
                 cmd.ExecuteNonQuery();
@@ -82,6 +94,7 @@ namespace Infrastructure.Data
         public void Edit(IM253E01Usuario usuario)
         {
             using (var con = new SqlConnection(_connectionString))
+            // Revertir a la consulta original SIN Edad ni Foto
             using (var cmd = new SqlCommand("UPDATE [IM253E01Usuario] SET [Nombre] = @nombre, [Direccion] = @direccion, [Telefono] = @telefono, [Correo] = @correo WHERE [Id] = @id", con))
             {
                 cmd.Parameters.Add("@id", SqlDbType.UniqueIdentifier).Value = usuario.Id;
@@ -89,6 +102,9 @@ namespace Infrastructure.Data
                 cmd.Parameters.Add("@direccion", SqlDbType.NVarChar).Value = (object)usuario.Direccion ?? DBNull.Value;
                 cmd.Parameters.Add("@telefono", SqlDbType.NVarChar).Value = usuario.Telefono;
                 cmd.Parameters.Add("@correo", SqlDbType.NVarChar).Value = (object)usuario.Correo ?? DBNull.Value;
+                // Eliminar los parámetros para Edad y Foto
+                // cmd.Parameters.Add("@edad", SqlDbType.Int).Value = (object)usuario.Edad ?? DBNull.Value;
+                // cmd.Parameters.Add("@foto", SqlDbType.NVarChar).Value = (object)usuario.Foto ?? DBNull.Value;
 
                 con.Open();
                 cmd.ExecuteNonQuery();
