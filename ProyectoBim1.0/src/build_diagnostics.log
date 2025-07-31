@@ -1,0 +1,6 @@
+MSBUILD : error MSB1001: Modificador desconocido.
+    Línea de comandos completa: 'C:\Program Files\dotnet\sdk\9.0.300\MSBuild.dll -maxcpucount -verbosity:m -tlp:default=auto -nologo -restore -consoleloggerparameters:Summary -verbosity:diag --project Presentation.WebApp/Presentation.WebApp.csproj -distributedlogger:Microsoft.DotNet.Tools.MSBuild.MSBuildLogger,C:\Program Files\dotnet\sdk\9.0.300\dotnet.dll*Microsoft.DotNet.Tools.MSBuild.MSBuildForwardingLogger,C:\Program Files\dotnet\sdk\9.0.300\dotnet.dll'
+  Modificadores anexados por archivos de respuesta: 
+Modificador: --project
+
+Para modificar la sintaxis, escriba "MSBuild -help"
