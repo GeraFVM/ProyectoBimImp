@@ -24,28 +24,53 @@
     <tr>
         <th>Id</th>
         <th>Nombre</th>
-        <th>Edad</th> <th></th>
+        <th>Edad</th>
+        <th></th>
     </tr>
     @foreach (var e in Model)
     {
         <tr>
             <td>@e.Id</td>
             <th>@e.Nombre</th>
-            <td>@(e.Edad?.ToString() ?? "N/A")</td> <td>
+            <td>@(e.Edad?.ToString() ?? "N/A")</td>
+            <td>
                 <a asp-action="Details" asp-route-id="@e.Id">Detalles</a> |
                 <a asp-action="Edit" asp-route-id="@e.Id">Editar</a> |
-                <a href="#" onclick="confirmDelete('@e.Id'); return false;">Eliminar</a>
+                <a href="#" onclick="Delete('@e.Id')" class="btn btn-danger">Eliminar</a>
             </td>
         </tr>
     }
 </table>
 
+
+<div class="modal fade" id="eliminarModal" tabindex="-1" role="dialog" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eliminarModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar este registro?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                
+                <form asp-action="Delete" asp-controller="Usuarios" method="post" id="deleteForm" style="display:inline;">
+                    <input type="hidden" name="id" id="deleteIdInput" />
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
-        function confirmDelete(id) {
-            if (confirm("¿Estás seguro de que quieres eliminar a este usuario? Esta acción no se puede deshacer.")) {
-                window.location.href = '@Url.Action("Delete", "Usuarios")/' + id;
-            }
+        // La función JavaScript ya se llama 'Delete', lo cual coincide con el 'onclick'
+        function Delete(id) {
+            $('#deleteIdInput').val(id);
+            $('#eliminarModal').modal('show');
         }
     </script>
 }

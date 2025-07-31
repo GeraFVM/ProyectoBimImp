@@ -2,9 +2,10 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Domain.Entities;
-using Infrastructure.Data;
-using Application.Services; // Reemplaza con el espacio de nombres correcto para FileConverterService
-using System.Linq; // Necesario para Linq
+using Infrastructure.Data; // Asumiendo que UsuariosDbContext está aquí
+using Application.Services; 
+using System.Linq; 
+using System.Collections.Generic; // Para List<IM253E01Usuario> si el filtro no encuentra nada
 
 namespace Presentation.WebApp.Controllers
 {
@@ -23,43 +24,35 @@ namespace Presentation.WebApp.Controllers
             _usuariosDbContext = new UsuariosDbContext(connectionString);
         }
 
-        // Modifica este método para aceptar un parámetro de búsqueda
         public IActionResult Index(string searchId)
         {
-            // Obtener todos los usuarios inicialmente
             var data = _usuariosDbContext.List();
 
-            // Si hay un término de búsqueda, filtrar la lista
             if (!string.IsNullOrEmpty(searchId))
             {
-                // Intentar convertir el searchId a Guid
                 if (Guid.TryParse(searchId, out Guid idToSearch))
                 {
-                    // Filtrar por ID
                     data = data.Where(u => u.Id == idToSearch).ToList();
                 }
                 else
                 {
-                    // Si el ID no es un GUID válido, puedes decidir cómo manejarlo.
-                    // Por ahora, no se encontrarán resultados por ID,
-                    // y podrías agregar un mensaje de error si lo deseas.
-                    // Para este ejemplo, simplemente no se filtrará por ID si es inválido.
-                    data = new List<IM253E01Usuario>(); // O data = data; si prefieres que se muestren todos si el ID es inválido.
-                    ViewData["ErrorMessage"] = "El ID de búsqueda no es un formato válido."; // Opcional: mensaje de error
+                    data = new List<IM253E01Usuario>(); 
+                    ViewData["ErrorMessage"] = "El ID de búsqueda no es un formato válido."; 
                 }
 
-                // Guardar el término de búsqueda actual para que el cuadro de texto lo mantenga
                 ViewData["CurrentFilter"] = searchId;
             }
 
             return View(data);
         }
 
-        // ... (resto de tus métodos Create, Edit, Details, Delete, DeleteConfirmed) ...
-
         public IActionResult Details(Guid id)
         {
             var data = _usuariosDbContext.Details(id);
+            if (data == null)
+            {
+                return NotFound();
+            }
             return View(data);
         }
 
@@ -83,6 +76,10 @@ namespace Presentation.WebApp.Controllers
         public IActionResult Edit(Guid id)
         {
             var data = _usuariosDbContext.Details(id);
+            if (data == null)
+            {
+                return NotFound();
+            }
             return View(data);
         }
 
@@ -93,28 +90,19 @@ namespace Presentation.WebApp.Controllers
             {
                 data.Foto = FileConverterService.ConvertToBase64(file.OpenReadStream());
             }
-
             _usuariosDbContext.Edit(data);
             return RedirectToAction("Index");
         }
-
-        // GET: Usuarios/Delete/{id}
-        public IActionResult Delete(Guid id)
-        {
-            var data = _usuariosDbContext.Details(id);
-            if (data == null)
-            {
-                return NotFound();
-            }
-            return View(data);
-        }
-
-        // POST: Usuarios/Delete/{id}
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete")] 
         public IActionResult DeleteConfirmed(Guid id)
         {
-            _usuariosDbContext.Delete(id);
+            var usuarioToDelete = _usuariosDbContext.Details(id); 
+            if (usuarioToDelete == null)
+            {
+                return RedirectToAction("Index"); 
+            }
+
+            _usuariosDbContext.Delete(id); 
             return RedirectToAction("Index");
         }
     }
