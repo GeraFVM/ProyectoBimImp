@@ -4,54 +4,39 @@
 
 @model Domain.Entities.IM253E01Libro
 
-<h1>Detalles del Libro</h1>
+<div class="container mt-4">
+    <h1 class="mb-4">Detalles del Libro</h1>
 
-<div>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">Id:</dt>
-        <dd class="col-sm-10">@Model.Id</dd>
+    <div>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">Id:</dt>
+            <dd class="col-sm-9">@Model.Id</dd>
 
-        @* Se eliminó la sección de Título *@
-        @* <dt class="col-sm-2">Título:</dt>
-        <dd class="col-sm-10">@Model.Titulo</dd> *@
+            <dt class="col-sm-3">Autor:</dt>
+            <dd class="col-sm-9">@(Model.Autor ?? "N/A")</dd>
 
-        <dt class="col-sm-2">Autor:</dt>
-        <dd class="col-sm-10">@Model.Autor</dd>
+            <dt class="col-sm-3">Editorial:</dt>
+            <dd class="col-sm-9">@(Model.Editorial ?? "N/A")</dd>
 
-        <dt class="col-sm-2">Editorial:</dt>
-        <dd class="col-sm-10">@(Model.Editorial ?? "N/A")</dd>
+            <dt class="col-sm-3">ISBN:</dt>
+            <dd class="col-sm-9">@(Model.ISBN ?? "N/A")</dd>
 
-        <dt class="col-sm-2">ISBN:</dt>
-        <dd class="col-sm-10">@Model.ISBN</dd>
-
-        @* Se eliminó la sección de Fecha de Publicación *@
-        @* <dt class="col-sm-2">Fecha de Publicación:</dt>
-        <dd class="col-sm-10">
-            @if (Model.FechaPublicacion != null)
-            {
-                @Model.FechaPublicacion.ToShortDateString()
-            }
-            else
-            {
-                <span>No disponible</span>
-            }
-        </dd> *@
-
-        <dt class="col-sm-2">Foto:</dt>
-        <dd class="col-sm-10">
-            @if (!string.IsNullOrEmpty(Model.Foto))
-            {
-                <img src="@Model.Foto" alt="Foto del libro" style="max-width:300px; height:auto;" />
-            }
-            else
-            {
-                <span>No disponible</span>
-            }
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a> |
-    <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
+            <dt class="col-sm-3">Foto:</dt>
+            <dd class="col-sm-9">
+                @if (!string.IsNullOrEmpty(Model.Foto))
+                {
+                    <img src="@Model.Foto" alt="Foto del libro" class="img-fluid" style="max-width:300px; height:auto;" />
+                }
+                else
+                {
+                    <span>No disponible</span>
+                }
+            </dd>
+        </dl>
+    </div>
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2">Editar</a>
+        <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
+    </div>
 </div>

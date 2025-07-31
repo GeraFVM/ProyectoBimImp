@@ -19,7 +19,7 @@ namespace Infrastructure.Data
         {
             var data = new List<IM253E01Libro>();
 
-            // Se eliminó Titulo y FechaPublicacion de la consulta SELECT
+            // Consulta SELECT solo con las columnas existentes en la DB
             using (var con = new SqlConnection(_connectionString))
             using (var cmd = new SqlCommand("SELECT [Id],[Autor],[Editorial],[ISBN],[Foto] FROM [IM253E01Libro]", con))
             {
@@ -33,12 +33,10 @@ namespace Infrastructure.Data
                             data.Add(new IM253E01Libro
                             {
                                 Id = (Guid)dr["Id"],
-                                // Se eliminó la lectura de Titulo
-                                Autor = dr["Autor"].ToString(),
-                                Editorial = dr["Editorial"]?.ToString(),
-                                ISBN = dr["ISBN"].ToString(),
-                                // Se eliminó la lectura de FechaPublicacion
-                                Foto = dr["Foto"]?.ToString()
+                                Autor = dr["Autor"]?.ToString(),     // Lectura de Autor (puede ser null)
+                                Editorial = dr["Editorial"]?.ToString(), // Lectura de Editorial (puede ser null)
+                                ISBN = dr["ISBN"]?.ToString(),       // Lectura de ISBN (puede ser null)
+                                Foto = dr["Foto"]?.ToString()        // Lectura de Foto (puede ser null)
                             });
                         }
                     }
@@ -55,7 +53,7 @@ namespace Infrastructure.Data
         {
             var libro = new IM253E01Libro();
 
-            // Se eliminó Titulo y FechaPublicacion de la consulta SELECT
+            // Consulta SELECT solo con las columnas existentes en la DB
             using (var con = new SqlConnection(_connectionString))
             using (var cmd = new SqlCommand("SELECT [Id],[Autor],[Editorial],[ISBN],[Foto] FROM [IM253E01Libro] WHERE [Id] = @id", con))
             {
@@ -69,11 +67,9 @@ namespace Infrastructure.Data
                         if (dr.Read())
                         {
                             libro.Id = (Guid)dr["Id"];
-                            // Se eliminó la lectura de Titulo
-                            libro.Autor = dr["Autor"].ToString();
+                            libro.Autor = dr["Autor"]?.ToString();
                             libro.Editorial = dr["Editorial"]?.ToString();
-                            libro.ISBN = dr["ISBN"].ToString();
-                            // Se eliminó la lectura de FechaPublicacion
+                            libro.ISBN = dr["ISBN"]?.ToString();
                             libro.Foto = dr["Foto"]?.ToString();
                         }
                         else
@@ -94,16 +90,15 @@ namespace Infrastructure.Data
         {
             using (var con = new SqlConnection(_connectionString))
             using (var cmd = new SqlCommand(
-                // Se eliminó Titulo y FechaPublicacion de la consulta INSERT
+                // Consulta INSERT solo con las columnas existentes en la DB
                 "INSERT INTO [IM253E01Libro] ([Id],[Autor],[Editorial],[ISBN],[Foto]) " +
                 "VALUES (@id,@autor,@editorial,@isbn,@foto)", con))
             {
                 cmd.Parameters.Add("@id", SqlDbType.UniqueIdentifier).Value = libro.Id;
-                // Se eliminó el parámetro @titulo
-                cmd.Parameters.Add("@autor", SqlDbType.NVarChar).Value = libro.Autor;
+                // Usamos DBNull.Value para campos nulos
+                cmd.Parameters.Add("@autor", SqlDbType.NVarChar).Value = (object)libro.Autor ?? DBNull.Value;
                 cmd.Parameters.Add("@editorial", SqlDbType.NVarChar).Value = (object)libro.Editorial ?? DBNull.Value;
-                cmd.Parameters.Add("@isbn", SqlDbType.NVarChar).Value = libro.ISBN;
-                // Se eliminó el parámetro @fechapublicacion
+                cmd.Parameters.Add("@isbn", SqlDbType.NVarChar).Value = (object)libro.ISBN ?? DBNull.Value;
                 cmd.Parameters.Add("@foto", SqlDbType.NVarChar).Value = (object)libro.Foto ?? DBNull.Value;
 
                 try
@@ -122,16 +117,15 @@ namespace Infrastructure.Data
         {
             using (var con = new SqlConnection(_connectionString))
             using (var cmd = new SqlCommand(
-                // Se eliminó Titulo y FechaPublicacion de la consulta UPDATE
+                // Consulta UPDATE solo con las columnas existentes en la DB
                 "UPDATE [IM253E01Libro] SET [Autor] = @autor, [Editorial] = @editorial, " +
                 "[ISBN] = @isbn, [Foto] = @foto WHERE [Id] = @id", con))
             {
                 cmd.Parameters.Add("@id", SqlDbType.UniqueIdentifier).Value = libro.Id;
-                // Se eliminó el parámetro @titulo
-                cmd.Parameters.Add("@autor", SqlDbType.NVarChar).Value = libro.Autor;
+                // Usamos DBNull.Value para campos nulos
+                cmd.Parameters.Add("@autor", SqlDbType.NVarChar).Value = (object)libro.Autor ?? DBNull.Value;
                 cmd.Parameters.Add("@editorial", SqlDbType.NVarChar).Value = (object)libro.Editorial ?? DBNull.Value;
-                cmd.Parameters.Add("@isbn", SqlDbType.NVarChar).Value = libro.ISBN;
-                // Se eliminó el parámetro @fechapublicacion
+                cmd.Parameters.Add("@isbn", SqlDbType.NVarChar).Value = (object)libro.ISBN ?? DBNull.Value;
                 cmd.Parameters.Add("@foto", SqlDbType.NVarChar).Value = (object)libro.Foto ?? DBNull.Value;
 
                 try

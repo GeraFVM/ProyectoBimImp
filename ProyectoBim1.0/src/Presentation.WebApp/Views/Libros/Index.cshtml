@@ -4,75 +4,134 @@
 
 @model List<Domain.Entities.IM253E01Libro>
 
-<a asp-action="Create">Crear Nuevo Libro</a>
+<div class="container mt-4">
+    <h1 class="mb-4">Lista de Libros</h1>
 
-<h1>
-    Lista de Libros:
-</h1>
+    <a asp-action="Create" class="btn btn-primary mb-3">Crear Nuevo Libro</a>
 
-<form asp-action="Index" method="get" class="mb-3">
-    <div class="input-group">
-        <input type="text" name="searchId" class="form-control" placeholder="Buscar por ID..." value="@ViewData["CurrentIdFilter"]" />
-        <input type="text" name="searchString" class="form-control" placeholder="Buscar por Autor..." value="@ViewData["CurrentStringFilter"]" /> @* Título eliminado del placeholder *@
-        <div class="input-group-append">
+    <form asp-action="Index" method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="searchId" class="form-control" placeholder="Buscar por ID..." value="@ViewData["CurrentIdFilter"]" />
+            <input type="text" name="searchString" class="form-control" placeholder="Buscar por Autor..." value="@ViewData["CurrentStringFilter"]" />
             <button type="submit" class="btn btn-outline-secondary">Buscar</button>
             <a asp-action="Index" class="btn btn-outline-secondary">Limpiar</a>
         </div>
-    </div>
-    @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
-    {
-        <p style="color:red;">@ViewData["ErrorMessage"]</p>
-    }
-</form>
+        @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
+        {
+            <p class="text-danger mt-2">@ViewData["ErrorMessage"]</p>
+        }
+    </form>
 
-<table>
-    <thead>
-        <tr>
-            <th>Id</th> 
-            @* Se eliminó <th>Título</th> *@
-            <th>Autor</th>
-            @* Se eliminó <th>Fecha de Publicación</th> *@
-            <th>Editorial</th> @* Añadida Editorial para mostrar todas las columnas existentes en la BD *@
-            <th>ISBN</th> @* Añadida ISBN para mostrar todas las columnas existentes en la BD *@
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var libro in Model)
-        {
-            <tr>
-                <td>@libro.Id</td> 
-                @* Se eliminó <td>@libro.Titulo</td> *@
-                <td>@libro.Autor</td>
-                <td>@(libro.Editorial ?? "N/A")</td> @* Muestra Editorial, con "N/A" si es nulo *@
-                <td>@libro.ISBN</td> @* Muestra ISBN *@
-                @* Se eliminó el bloque de FechaPublicacion *@
-                <td>
-                    <a asp-action="Details" asp-route-id="@libro.Id">Detalles</a> |
-                    <a asp-action="Edit" asp-route-id="@libro.Id">Editar</a> |
-                    <a href="#" onclick="confirmDeleteLibro('@libro.Id'); return false;">Eliminar</a>
-                </td>
-            </tr>
-        }
-        @if (!Model.Any())
-        {
-            <tr>
-                <td colspan="5">No se encontraron libros.</td> @* Se ajustó el colspan a 5 (Id, Autor, Editorial, ISBN, Acciones) *@
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Autor</th>
+                    <th>Editorial</th>
+                    <th>ISBN</th>
+                    <th>Foto</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var libro in Model)
+                {
+                    <tr>
+                        <td>@libro.Id</td>
+                        <td>@(libro.Autor ?? "N/A")</td>
+                        <td>@(libro.Editorial ?? "N/A")</td>
+                        <td>@(libro.ISBN ?? "N/A")</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(libro.Foto))
+                            {
+                                <img src="@libro.Foto" alt="Foto" style="max-width: 50px; max-height: 50px; object-fit: cover; border-radius: 5px;" />
+                            }
+                            else
+                            {
+                                <span>No</span>
+                            }
+                        </td>
+                        <td>
+                            @* ¡CORRECCIÓN AQUÍ! Ahora llama a la función JS para el modal *@
+                            <a href="#" onclick="showLibroDetailsModal('@libro.Id');" class="btn btn-info btn-sm">Detalles</a>
+                            <a asp-action="Edit" asp-route-id="@libro.Id" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="#" onclick="confirmDeleteLibro('@libro.Id');" class="btn btn-danger btn-sm">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center">No se encontraron libros.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="eliminarModalLibro" tabindex="-1" role="dialog" aria-labelledby="eliminarModalLibroLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eliminarModalLibroLabel">Confirmar Eliminación de Libro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar este libro? Esta acción no se puede deshacer.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form asp-action="Delete" asp-controller="Libros" method="post" id="deleteLibroForm" style="display:inline;">
+                    <input type="hidden" name="id" id="deleteLibroIdInput" />
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="detailsModalLibro" tabindex="-1" role="dialog" aria-labelledby="detailsModalLibroLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLibroLabel">Detalles del Libro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="detailsContentLibro">Cargando...</div> @* Contenido cargado por AJAX *@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script>
-        // Función de confirmación para eliminar libros
         function confirmDeleteLibro(id) {
-            if (confirm("¿Estás seguro de que quieres eliminar este libro? Esta acción no se puede deshacer.")) {
-                // Se cambió a POST para el método DeleteConfirmed
-                $.post('@Url.Action("Delete", "Libros")', { id: id }, function () {
-                    window.location.reload(); // Recargar la página después de eliminar
-                });
-            }
+            $('#deleteLibroIdInput').val(id);
+            $('#eliminarModalLibro').modal('show');
+        }
+
+        function showLibroDetailsModal(id) {
+            $('#detailsContentLibro').html('Cargando detalles...'); 
+            $.ajax({
+                url: '@Url.Action("Details", "Libros")', 
+                type: 'GET',
+                data: { id: id },
+                success: function(result) {
+                    $('#detailsContentLibro').html(result); 
+                    $('#detailsModalLibro').modal('show'); 
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error al cargar detalles del libro:", error);
+                    $('#detailsContentLibro').html('<p class="text-danger">No se pudieron cargar los detalles del libro.</p>');
+                    $('#detailsModalLibro').modal('show');
+                }
+            });
         }
     </script>
 }

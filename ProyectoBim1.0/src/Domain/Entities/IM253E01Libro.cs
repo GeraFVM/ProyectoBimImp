@@ -17,9 +17,9 @@ namespace Domain.Entities
     public class IM253E01Libro
     {
         public Guid Id { get; set; }
-        public string Autor { get; set; } = string.Empty;
-        public string? Editorial { get; set; }
-        public string ISBN { get; set; } = string.Empty;
-        public string? Foto { get; set; }
+        public string? Autor { get; set; }     // Coincide con NULL en DB
+        public string? Editorial { get; set; } // Coincide con NULL en DB
+        public string? ISBN { get; set; }      // Coincide con NULL en DB
+        public string? Foto { get; set; }      // Coincide con NULL en DB
     }
 }
