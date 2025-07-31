@@ -2,18 +2,25 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Domain.Entities;
-using Infrastructure.Data; // Asumiendo que UsuariosDbContext está aquí
+using Infrastructure.Data; 
 using Application.Services; 
 using System.Linq; 
-using System.Collections.Generic; // Para List<IM253E01Usuario> si el filtro no encuentra nada
+using System.Collections.Generic; 
+using Microsoft.AspNetCore.Mvc.Rendering;       
+using Microsoft.AspNetCore.Mvc.ViewEngines;    
+using Microsoft.AspNetCore.Mvc.ViewFeatures;   
+using System.IO;                                
+using System.Threading.Tasks;                   
 
 namespace Presentation.WebApp.Controllers
 {
     public class UsuariosController : Controller
     {
         private readonly UsuariosDbContext _usuariosDbContext;
+        private readonly IRazorViewEngine _razorViewEngine;     
+        private readonly ITempDataProvider _tempDataProvider;   
 
-        public UsuariosController(IConfiguration configuration)
+        public UsuariosController(IConfiguration configuration, IRazorViewEngine razorViewEngine, ITempDataProvider tempDataProvider)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             if (string.IsNullOrEmpty(connectionString))
@@ -22,6 +29,8 @@ namespace Presentation.WebApp.Controllers
             }
 
             _usuariosDbContext = new UsuariosDbContext(connectionString);
+            _razorViewEngine = razorViewEngine;
+            _tempDataProvider = tempDataProvider;
         }
 
         public IActionResult Index(string searchId)
@@ -46,14 +55,40 @@ namespace Presentation.WebApp.Controllers
             return View(data);
         }
 
-        public IActionResult Details(Guid id)
+        public async Task<IActionResult> Details(Guid id) 
         {
             var data = _usuariosDbContext.Details(id);
             if (data == null)
             {
-                return NotFound();
+                return Content("<p class='text-danger'>Usuario no encontrado.</p>", "text/html");
             }
-            return View(data);
+
+            var viewResult = _razorViewEngine.FindView(ControllerContext, "Details", false); 
+
+            if (viewResult.View == null)
+            {
+                throw new ArgumentNullException($"La vista 'Details' no fue encontrada.");
+            }
+
+            var viewDictionary = new ViewDataDictionary(new Microsoft.AspNetCore.Mvc.ModelBinding.EmptyModelMetadataProvider(), ModelState)
+            {
+                Model = data 
+            };
+
+            using (var writer = new StringWriter())
+            {
+                var viewContext = new ViewContext(
+                    ControllerContext,
+                    viewResult.View,
+                    viewDictionary,
+                    new TempDataDictionary(ControllerContext.HttpContext, _tempDataProvider),
+                    writer,
+                    new HtmlHelperOptions()
+                );
+
+                await viewResult.View.RenderAsync(viewContext); 
+                return Content(writer.ToString(), "text/html"); 
+            }
         }
 
         public IActionResult Create()
@@ -93,6 +128,7 @@ namespace Presentation.WebApp.Controllers
             _usuariosDbContext.Edit(data);
             return RedirectToAction("Index");
         }
+
         [HttpPost, ActionName("Delete")] 
         public IActionResult DeleteConfirmed(Guid id)
         {

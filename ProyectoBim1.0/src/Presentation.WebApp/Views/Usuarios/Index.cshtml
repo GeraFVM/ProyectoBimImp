@@ -34,7 +34,7 @@
             <th>@e.Nombre</th>
             <td>@(e.Edad?.ToString() ?? "N/A")</td>
             <td>
-                <a asp-action="Details" asp-route-id="@e.Id">Detalles</a> |
+                <a href="#" onclick="showDetailsModal('@e.Id')" class="btn btn-info">Detalles</a> |
                 <a asp-action="Edit" asp-route-id="@e.Id">Editar</a> |
                 <a href="#" onclick="Delete('@e.Id')" class="btn btn-danger">Eliminar</a>
             </td>
@@ -42,6 +42,22 @@
     }
 </table>
 
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document"> 
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel">Detalles del Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="detailsContent">Cargando...</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="eliminarModal" tabindex="-1" role="dialog" aria-labelledby="eliminarModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -51,7 +67,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ¿Estás seguro de que deseas eliminar este registro?
+                ¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -67,10 +83,26 @@
 
 @section Scripts {
     <script>
-        // La función JavaScript ya se llama 'Delete', lo cual coincide con el 'onclick'
         function Delete(id) {
             $('#deleteIdInput').val(id);
             $('#eliminarModal').modal('show');
+        }
+        function showDetailsModal(id) {
+            $('#detailsContent').html('Cargando detalles...');
+            $.ajax({
+                url: '@Url.Action("Details", "Usuarios")', 
+                type: 'GET',
+                data: { id: id }, 
+                success: function(result) {
+                    $('#detailsContent').html(result);
+                    $('#detailsModal').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error al cargar detalles:", error);
+                    $('#detailsContent').html('<p class="text-danger">No se pudieron cargar los detalles.</p>');
+                    $('#detailsModal').modal('show'); 
+                }
+            });
         }
     </script>
 }

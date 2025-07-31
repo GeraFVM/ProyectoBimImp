@@ -9,6 +9,7 @@
       "Infrastructure/1.0.0": {
         "dependencies": {
           "Application": "1.0.0",
+          "Domain": "1.0.0",
           "Microsoft.Data.SqlClient": "6.0.2",
           "System.Data.SqlClient": "4.9.0"
         },

@@ -156,6 +156,9 @@
             "projectReferences": {
               "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBimImp\\ProyectoBim1.0\\src\\Application\\Application.csproj": {
                 "projectPath": "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBimImp\\ProyectoBim1.0\\src\\Application\\Application.csproj"
+              },
+              "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBimImp\\ProyectoBim1.0\\src\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\geraf\\OneDrive\\Escritorio\\ProyectoBimImp\\ProyectoBim1.0\\src\\Domain\\Domain.csproj"
               }
             }
           }
