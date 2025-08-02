@@ -1,4 +1,5 @@
 var builder = WebApplication.CreateBuilder(args);
+//ExcelPackage.License = "NonCommercial";
 
 // Add services to the container.
 builder.Services.AddControllersWithViews()
