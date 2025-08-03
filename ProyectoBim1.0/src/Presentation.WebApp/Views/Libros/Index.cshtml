@@ -1,8 +1,10 @@
+@model List<Domain.Entities.IM253E01Libro>
 @{
     ViewData["Title"] = "Libros";
 }
 
-@model List<Domain.Entities.IM253E01Libro>
+<link href="//cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+<link href="//cdn.datatables.net/buttons/2.0.1/css/buttons.bootstrap5.min.css" rel="stylesheet" />
 
 <div class="container mt-4">
     <h1 class="mb-4">Lista de Libros</h1>
@@ -23,7 +25,7 @@
     </form>
 
     <div class="table-responsive">
-        <table class="table table-striped table-hover">
+        <table id="librosTable" class="table table-striped table-hover">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -53,7 +55,6 @@
                             }
                         </td>
                         <td>
-                            @* ¡CORRECCIÓN AQUÍ! Ahora llama a la función JS para el modal *@
                             <a href="#" onclick="showLibroDetailsModal('@libro.Id');" class="btn btn-info btn-sm">Detalles</a>
                             <a asp-action="Edit" asp-route-id="@libro.Id" class="btn btn-warning btn-sm">Editar</a>
                             <a href="#" onclick="confirmDeleteLibro('@libro.Id');" class="btn btn-danger btn-sm">Eliminar</a>
@@ -71,12 +72,13 @@
     </div>
 </div>
 
+<!-- Modal para eliminar libro -->
 <div class="modal fade" id="eliminarModalLibro" tabindex="-1" role="dialog" aria-labelledby="eliminarModalLibroLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="eliminarModalLibroLabel">Confirmar Eliminación de Libro</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
                 ¿Estás seguro de que deseas eliminar este libro? Esta acción no se puede deshacer.
@@ -92,15 +94,16 @@
     </div>
 </div>
 
+<!-- Modal para detalles del libro -->
 <div class="modal fade" id="detailsModalLibro" tabindex="-1" role="dialog" aria-labelledby="detailsModalLibroLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="detailsModalLibroLabel">Detalles del Libro</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
-                <div id="detailsContentLibro">Cargando...</div> @* Contenido cargado por AJAX *@
+                <div id="detailsContentLibro">Cargando...</div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -109,7 +112,42 @@
     </div>
 </div>
 
+<style>
+    /* Botones personalizados Excel y PDF */
+    .dt-button.buttons-excel {
+        background-color: #28a745 !important;
+        border-color: #28a745 !important;
+        color: white !important;
+        border-radius: 4px;
+        margin-right: 5px;
+    }
+    .dt-button.buttons-excel:hover {
+        background-color: #218838 !important;
+        border-color: #1e7e34 !important;
+    }
+    .dt-button.buttons-pdf {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+        color: white !important;
+        border-radius: 4px;
+    }
+    .dt-button.buttons-pdf:hover {
+        background-color: #c82333 !important;
+        border-color: #bd2130 !important;
+    }
+</style>
+
 @section Scripts {
+    <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+    <script src="//cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+    <script src="//cdn.datatables.net/buttons/2.0.1/js/buttons.bootstrap5.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="//cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script>
+
     <script>
         function confirmDeleteLibro(id) {
             $('#deleteLibroIdInput').val(id);
@@ -117,21 +155,30 @@
         }
 
         function showLibroDetailsModal(id) {
-            $('#detailsContentLibro').html('Cargando detalles...'); 
+            $('#detailsContentLibro').html('Cargando detalles...');
             $.ajax({
-                url: '@Url.Action("Details", "Libros")', 
+                url: '@Url.Action("Details", "Libros")',
                 type: 'GET',
                 data: { id: id },
                 success: function(result) {
-                    $('#detailsContentLibro').html(result); 
-                    $('#detailsModalLibro').modal('show'); 
+                    $('#detailsContentLibro').html(result);
+                    $('#detailsModalLibro').modal('show');
                 },
-                error: function(xhr, status, error) {
-                    console.error("Error al cargar detalles del libro:", error);
+                error: function() {
                     $('#detailsContentLibro').html('<p class="text-danger">No se pudieron cargar los detalles del libro.</p>');
                     $('#detailsModalLibro').modal('show');
                 }
             });
         }
+
+        $(document).ready(function() {
+            $('#librosTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['excelHtml5', 'pdfHtml5'],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json'
+                }
+            });
+        });
     </script>
 }
